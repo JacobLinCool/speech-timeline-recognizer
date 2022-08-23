@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { Readable } from "node:stream";
-import vosk from "vosk";
+import vosk, { Model } from "vosk-lib";
 import wav from "wav";
 import Fuse from "fuse.js";
 import { OpenCC } from "opencc";
@@ -9,7 +9,7 @@ import { MODEL_DIR } from "./constants.js";
 import { convert } from "./convert.js";
 
 let loaded = false;
-let model: any;
+let model: Model;
 const converter = new OpenCC("s2t.json");
 
 export function reconize(
@@ -61,7 +61,7 @@ export function reconize(
                 }
             }
 
-            results.push(await extract(rec.finalResult(rec), expect));
+            results.push(await extract(rec.finalResult(), expect));
 
             const final = {
                 text: results.map((r) => r.text).join(""),
